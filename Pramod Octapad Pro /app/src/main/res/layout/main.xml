@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootMain"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#111111"
+    android:padding="4dp">
+
+    <!-- TOP BAR -->
+    <LinearLayout
+        android:id="@+id/topControlBar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:background="#000000"
+        android:gravity="center_vertical"
+        android:padding="4dp">
+
+        <Button
+            android:id="@+id/btnPrevKit"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.8"
+            android:text="-"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:background="@drawable/btn_3d_blue" />
+
+        <TextView
+            android:id="@+id/txtKitName"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.6"
+            android:layout_marginLeft="3dp"
+            android:gravity="center"
+            android:text="KIT 1"
+            android:textColor="#FFFF00"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:background="#111111" />
+
+        <Button
+            android:id="@+id/btnNextKit"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.8"
+            android:layout_marginLeft="3dp"
+            android:text="+"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:background="@drawable/btn_3d_blue" />
+
+        <Button
+            android:id="@+id/btnEditMode"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.2"
+            android:layout_marginLeft="3dp"
+            android:text="EDIT"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:background="@drawable/btn_3d_dark" />
+
+        <Button
+            android:id="@+id/btnRenameKit"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.2"
+            android:layout_marginLeft="3dp"
+            android:text="NAME"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:background="@drawable/btn_3d_purple" />
+
+        <Button
+            android:id="@+id/btnEq"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.2"
+            android:layout_marginLeft="3dp"
+            android:text="FX/ADV"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:background="@drawable/btn_3d_dark" />
+
+        <!-- VOLUME -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.2"
+            android:layout_marginLeft="4dp"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="VOL"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="9sp" />
+
+            <SeekBar
+                android:id="@+id/seekVolume"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="100" />
+        </LinearLayout>
+
+        <!-- PITCH -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.2"
+            android:layout_marginLeft="4dp"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PITCH"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="9sp" />
+
+            <SeekBar
+                android:id="@+id/seekPitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="150" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnSaveKit"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.2"
+            android:layout_marginLeft="4dp"
+            android:text="SAVE"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:background="@drawable/btn_glossy_3d" />
+
+        <Button
+            android:id="@+id/btnLoadKit"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.2"
+            android:layout_marginLeft="3dp"
+            android:text="LOAD"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:background="@drawable/btn_glossy_3d" />
+
+    </LinearLayout>
+
+    <!-- FX CONTROL BAR -->
+    <LinearLayout
+        android:id="@+id/fxControlBar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:background="#111111"
+        android:visibility="gone"
+        android:gravity="center_vertical"
+        android:padding="2dp">
+
+        <CheckBox
+            android:id="@+id/chkDelay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DLY"
+            android:textColor="#00FFFF"
+            android:textSize="10sp" />
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TIME" android:textColor="#FFF" android:textStyle="bold" android:textSize="9sp"/>
+            <SeekBar android:id="@+id/seekDelayTime" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="500" />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="LEVEL" android:textColor="#FFF" android:textStyle="bold" android:textSize="9sp"/>
+            <SeekBar android:id="@+id/seekDelayLevel" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="100" />
+        </LinearLayout>
+        
+        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#444" android:layout_margin="4dp"/>
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="HI-EQ" android:textColor="#FFF" android:textStyle="bold" android:textSize="9sp"/>
+            <SeekBar android:id="@+id/seekEqHigh" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="200" />
+        </LinearLayout>
+        
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="MID-EQ" android:textColor="#FFF" android:textStyle="bold" android:textSize="9sp"/>
+            <SeekBar android:id="@+id/seekEqMid" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="200" />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="LOW-EQ" android:textColor="#FFF" android:textStyle="bold" android:textSize="9sp"/>
+            <SeekBar android:id="@+id/seekEqLow" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="200" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- ADV CONTROL BAR -->
+    <LinearLayout
+        android:id="@+id/advControlBar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:background="#111111"
+        android:visibility="gone"
+        android:gravity="center_vertical"
+        android:padding="2dp">
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ATTACK" android:textColor="#FFF" android:textStyle="bold" android:textSize="9sp"/>
+            <SeekBar android:id="@+id/seekAttack" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="500" />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="RELEASE" android:textColor="#FFF" android:textStyle="bold" android:textSize="9sp"/>
+            <SeekBar android:id="@+id/seekRelease" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="500" />
+        </LinearLayout>
+
+        <View android:layout_width="1dp" android:layout_height="match_parent" android:background="#444" android:layout_margin="4dp"/>
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="CHOKE GRP" android:textColor="#FFF" android:textStyle="bold" android:textSize="9sp"/>
+            <SeekBar android:id="@+id/seekChokeGroup" android:layout_width="match_parent" android:layout_height="wrap_content" android:max="4" />
+        </LinearLayout>
+        
+        <Button
+            android:id="@+id/btnPadColor"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="COLOR"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp"
+            android:background="#333333" />
+    </LinearLayout>
+
+    <!-- TITLE BAR -->
+    <LinearLayout
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="#000000"
+        android:padding="6dp">
+
+        <TextView
+            android:id="@+id/txtSelectedPad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SELECTED : PAD 1"
+            android:textColor="#00AFFF"
+            android:textStyle="bold"
+            android:textSize="12sp" />
+            
+        <Button
+            android:id="@+id/btnBankToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:text="BANK A"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:background="#660000" />
+
+        <TextView
+            android:id="@+id/txtBrand"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="MOBILE OCTAPAD PRAMOD SAHU"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+    <!-- PAD AREA -->
+    <LinearLayout
+        android:id="@+id/padArea"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="4dp"
+        android:orientation="vertical"
+        android:padding="2dp">
+
+        <!-- ROW 1 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/pad1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="4dp"
+                android:text="PAD 1"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:background="@drawable/pad_black_selector" />
+
+            <Button
+                android:id="@+id/pad2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="4dp"
+                android:text="PAD 2"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:background="@drawable/pad_black_selector" />
+
+            <Button
+                android:id="@+id/pad3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="4dp"
+                android:text="PAD 3"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:background="@drawable/pad_black_selector" />
+
+            <Button
+                android:id="@+id/pad4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="4dp"
+                android:text="PAD 4"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:background="@drawable/pad_black_selector" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/pad5"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="4dp"
+                android:text="PAD 5"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:background="@drawable/pad_black_selector" />
+
+            <Button
+                android:id="@+id/pad6"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="4dp"
+                android:text="PAD 6"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:background="@drawable/pad_black_selector" />
+
+            <Button
+                android:id="@+id/pad7"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="4dp"
+                android:text="PAD 7"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:background="@drawable/pad_black_selector" />
+
+            <Button
+                android:id="@+id/pad8"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="4dp"
+                android:text="PAD 8"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:background="@drawable/pad_black_selector" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

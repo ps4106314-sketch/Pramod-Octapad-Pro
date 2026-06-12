@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- PRESSED STATE -->
+    <item android:state_pressed="true">
+        <layer-list>
+            <!-- 3D Push Down -->
+            <item android:top="4dp" android:left="4dp">
+                <shape android:shape="rectangle">
+                    <corners android:radius="18dp"/>
+                    <gradient
+                        android:startColor="#222222"
+                        android:centerColor="#111111"
+                        android:endColor="#000000"
+                        android:angle="270"/>
+                    <stroke android:width="3dp" android:color="#00AFFF"/> <!-- Blue glow when pressed -->
+                    <padding android:left="6dp" android:right="6dp" android:top="6dp" android:bottom="6dp"/>
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+
+    <!-- NORMAL STATE -->
+    <item>
+        <layer-list>
+            <!-- Drop Shadow for 3D depth -->
+            <item android:top="6dp" android:left="6dp">
+                <shape android:shape="rectangle">
+                    <corners android:radius="18dp"/>
+                    <solid android:color="#99000000"/>
+                </shape>
+            </item>
+
+            <!-- Black Base Base -->
+            <item android:bottom="4dp" android:right="4dp">
+                <shape android:shape="rectangle">
+                    <corners android:radius="18dp"/>
+                    <gradient
+                        android:startColor="#444444"
+                        android:centerColor="#1A1A1A"
+                        android:endColor="#000000"
+                        android:angle="270"/>
+                    <stroke android:width="2dp" android:color="#808080"/>
+                    <padding android:left="6dp" android:right="6dp" android:top="6dp" android:bottom="6dp"/>
+                </shape>
+            </item>
+
+            <!-- Glossy Shine Overlay Top -->
+            <item android:bottom="4dp" android:right="4dp">
+                <shape android:shape="rectangle">
+                    <corners android:radius="18dp"/>
+                    <gradient
+                        android:startColor="#77FFFFFF"
+                        android:centerColor="#11FFFFFF"
+                        android:centerY="0.3"
+                        android:endColor="#00FFFFFF"
+                        android:angle="270"/>
+                </shape>
+            </item>
+            
+            <!-- Bottom Dark Bevel 3D effect -->
+            <item android:bottom="4dp" android:right="4dp">
+                 <shape android:shape="rectangle">
+                    <corners android:radius="18dp"/>
+                    <gradient
+                        android:startColor="#00000000"
+                        android:centerColor="#00000000"
+                        android:centerY="0.7"
+                        android:endColor="#AA000000"
+                        android:angle="270"/>
+                 </shape>
+            </item>
+
+        </layer-list>
+    </item>
+
+</selector>
