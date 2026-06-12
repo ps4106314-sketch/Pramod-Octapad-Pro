@@ -1,0 +1,45 @@
+{
+  "buildFiles": [
+    "/workspaces/Pramod-Octapad-Pro/Pramod Octapad Pro /app/CMakeLists.txt",
+    "/workspaces/Pramod-Octapad-Pro/Pramod Octapad Pro /app/src/main/cpp/oboe/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/opt/android-sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/workspaces/Pramod-Octapad-Pro/Pramod Octapad Pro /app/.cxx/Debug/2k3m5b52/armeabi-v7a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/opt/android-sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/workspaces/Pramod-Octapad-Pro/Pramod Octapad Pro /app/.cxx/Debug/2k3m5b52/armeabi-v7a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "oboe::@0db0cf03f2959f768628": {
+      "toolchain": "toolchain",
+      "abi": "armeabi-v7a",
+      "artifactName": "oboe",
+      "output": "/workspaces/Pramod-Octapad-Pro/Pramod Octapad Pro /app/.cxx/Debug/2k3m5b52/armeabi-v7a/oboe/liboboe.a"
+    },
+    "oboe_audio_engine::@6890427a1f51a3e7e1df": {
+      "toolchain": "toolchain",
+      "abi": "armeabi-v7a",
+      "artifactName": "oboe_audio_engine",
+      "output": "/workspaces/Pramod-Octapad-Pro/Pramod Octapad Pro /app/build/intermediates/cxx/Debug/2k3m5b52/obj/armeabi-v7a/liboboe_audio_engine.so",
+      "runtimeFiles": []
+    }
+  },
+  "toolchains": {
+    "toolchain": {
+      "cCompilerExecutable": "/opt/android-sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/bin/clang.lld",
+      "cppCompilerExecutable": "/opt/android-sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++.lld"
+    }
+  },
+  "cFileExtensions": [],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}

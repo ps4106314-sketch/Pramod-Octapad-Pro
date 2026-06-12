@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "263614358958",
+    "project_id": "pramod-octapad-pro",
+    "storage_bucket": "pramod-octapad-pro.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:263614358958:android:4cd0426d99c38e02c9143f",
+        "android_client_info": {
+          "package_name": "com.pramod.octapadpromidi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCC3ibrilnRZdS647_2CtuiRJ3KRJXBCdQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
