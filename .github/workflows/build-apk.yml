@@ -3,12 +3,10 @@ name: Build APK
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -19,21 +17,20 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Android NDK
-        uses: nttld/setup-ndk@v1
-        with:
-          ndk-version: r25c
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
 
-      - name: Grant execute permission for gradlew
+      - name: Clean CMake cache
+        run: rm -rf "Pramod Octapad Pro /app/.cxx"
+
+      - name: Grant gradlew permission
         run: chmod +x "Pramod Octapad Pro /gradlew"
 
       - name: Build Debug APK
-        run: |
-          cd "Pramod Octapad Pro "
-          ./gradlew assembleDebug --stacktrace
+        run: cd "Pramod Octapad Pro " && ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Pramod-Octapad-Pro-debug
+          name: debug-apk
           path: "Pramod Octapad Pro /app/build/outputs/apk/debug/*.apk"
