@@ -1,36 +1,27 @@
-name: Build APK
+buildscript {
+    ext.build_gradle_version = '8.2.0'
 
-on:
-  push:
-    branches: [ main ]
+    repositories {
+        google()
+        mavenCentral()
+        maven { url "https://jitpack.io" }
+        maven { url "https://clojars.org/repo/" }
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:$build_gradle_version"
+        classpath 'com.google.gms:google-services:4.4.1'
+    }
+}
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url "https://jitpack.io" }
+        maven { url "https://clojars.org/repo/" }
+    }
+}
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Clean CMake cache
-        run: rm -rf "Pramod Octapad Pro /app/.cxx"
-
-      - name: Grant gradlew permission
-        run: chmod +x "Pramod Octapad Pro /gradlew"
-
-      - name: Build Debug APK
-        run: cd "Pramod Octapad Pro " && ./gradlew assembleDebug
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: debug-apk
-          path: "Pramod Octapad Pro /app/build/outputs/apk/debug/*.apk"
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
