@@ -17,8 +17,8 @@ using namespace oboe;
 static void restartAudioEngine();
 
 static constexpr int PAD_COUNT = 16;
-static constexpr int MAX_STREAMS_PER_PAD = 8; // Increased for delay streams
-static constexpr int MAX_SAMPLE_SIZE = 960000; // ~10 seconds at 96kHz
+static constexpr int MAX_STREAMS_PER_PAD = 8;
+static constexpr int MAX_SAMPLE_SIZE = 960000;
 static constexpr float PI = 3.14159265358979323846f;
 
 struct Biquad {
@@ -30,7 +30,7 @@ struct Biquad {
     void setLowShelf(float Fs, float f0, float dBgain) {
         float A = std::pow(10.0f, dBgain / 40.0f);
         float w0 = 2.0f * PI * f0 / Fs;
-        float alpha = std::sin(w0) / 2.0f; // Q = 1
+        float alpha = std::sin(w0) / 2.0f;
         float a0 = (A+1.0f) + (A-1.0f)*std::cos(w0) + 2.0f*std::sqrt(A)*alpha;
         b0 = (A*( (A+1.0f) - (A-1.0f)*std::cos(w0) + 2.0f*std::sqrt(A)*alpha )) / a0;
         b1 = (2.0f*A*( (A-1.0f) - (A+1.0f)*std::cos(w0) )) / a0;
@@ -54,7 +54,7 @@ struct Biquad {
     void setHighShelf(float Fs, float f0, float dBgain) {
         float A = std::pow(10.0f, dBgain / 40.0f);
         float w0 = 2.0f * PI * f0 / Fs;
-        float alpha = std::sin(w0) / 2.0f; // Q = 1
+        float alpha = std::sin(w0) / 2.0f;
         float a0 = (A+1.0f) - (A-1.0f)*std::cos(w0) + 2.0f*std::sqrt(A)*alpha;
         b0 = (A*( (A+1.0f) + (A-1.0f)*std::cos(w0) + 2.0f*std::sqrt(A)*alpha )) / a0;
         b1 = (-2.0f*A*( (A-1.0f) + (A+1.0f)*std::cos(w0) )) / a0;
@@ -100,7 +100,7 @@ private:
     AudioSample samples[PAD_COUNT];
     PlaybackStream streams[PAD_COUNT * MAX_STREAMS_PER_PAD];
     int32_t sampleRate = 48000;
-    
+
 public:
     OctapadAudioCallback() {
         for (int i = 0; i < PAD_COUNT; i++) {
@@ -110,64 +110,62 @@ public:
             streams[i].active = false;
         }
     }
-    
+
     void setSampleRate(int32_t rate) {
         sampleRate = rate;
     }
-    
+
     DataCallbackResult onAudioReady(AudioStream *audioStream, void *audioData, int32_t numFrames) override {
         int16_t *outputBuffer = static_cast<int16_t *>(audioData);
         int32_t channelCount = audioStream->getChannelCount();
         int32_t totalSamples = numFrames * channelCount;
 
         std::fill(outputBuffer, outputBuffer + totalSamples, 0);
-        
+
         for (int streamIdx = 0; streamIdx < PAD_COUNT * MAX_STREAMS_PER_PAD; streamIdx++) {
             PlaybackStream &stream = streams[streamIdx];
-            
+
             if (!stream.active) continue;
-            
+
             AudioSample &sample = samples[stream.sampleIndex];
             if (!sample.loaded || sample.frameCount == 0) {
                 stream.active = false;
                 continue;
             }
-            
+
             int32_t outIndex = 0;
             float playPos = stream.playbackPosition;
             float pitchRate = stream.pitch;
             float volume = stream.volume;
-            
+
             while (outIndex < numFrames) {
                 int32_t intPos = static_cast<int32_t>(playPos);
-                
+
                 if (intPos >= sample.frameCount) {
                     stream.active = false;
                     break;
                 }
-                
+
                 if (intPos < 0) {
-                    // Delay padding
                     playPos += pitchRate;
                     outIndex++;
                     continue;
                 }
-                
+
                 float frac = playPos - intPos;
                 int32_t nextPos = intPos + 1;
                 if (nextPos >= sample.frameCount) nextPos = sample.frameCount - 1;
-                
+
                 float sample1 = sample.data[intPos] / 32768.0f;
                 float sample2 = sample.data[nextPos] / 32768.0f;
                 float interpolated = sample1 * (1.0f - frac) + sample2 * frac;
-                
+
                 if (stream.useEq) {
                     interpolated = stream.eqLow.process(interpolated);
                     interpolated = stream.eqMid.process(interpolated);
                     interpolated = stream.eqHigh.process(interpolated);
                 }
-                
-                // Envelope (Fade In / Fade Out)
+
                 float envMult = 1.0f;
                 if (stream.attackFrames > 0 && playPos < stream.attackFrames) {
                     envMult = playPos / stream.attackFrames;
@@ -175,21 +173,20 @@ public:
                     envMult = (sample.frameCount - playPos) / stream.releaseFrames;
                     if (envMult < 0) envMult = 0.0f;
                 }
-                
-                // Fast Choke fade-out (prevent clicks)
+
                 if (stream.isChoked) {
-                    stream.chokeVolMult -= 0.005f; // approx 200 samples fade out (~4ms)
+                    stream.chokeVolMult -= 0.005f;
                     if (stream.chokeVolMult <= 0.0f) {
                         stream.active = false;
                         break;
                     }
                     envMult *= stream.chokeVolMult;
                 }
-                
+
                 float mixed = interpolated * volume * envMult;
                 mixed = std::max(-1.0f, std::min(1.0f, mixed));
                 int16_t mixedSample = static_cast<int16_t>(mixed * 32767.0f);
-                
+
                 int32_t writeIndex = outIndex * channelCount;
                 if (channelCount == 1) {
                     int32_t accum = static_cast<int32_t>(outputBuffer[writeIndex]) + mixedSample;
@@ -200,42 +197,41 @@ public:
                     outputBuffer[writeIndex] = static_cast<int16_t>(std::max(-32768, std::min(32767, accumL)));
                     outputBuffer[writeIndex + 1] = static_cast<int16_t>(std::max(-32768, std::min(32767, accumR)));
                 }
-                
+
                 playPos += pitchRate;
                 outIndex++;
             }
-            
+
             stream.playbackPosition = playPos;
         }
-        
+
         return DataCallbackResult::Continue;
     }
-    
+
     void onErrorAfterClose(AudioStream *audioStream, Result error) override {
         LOGI("Audio stream error/disconnected. Restarting engine in a new thread...");
         std::thread restartThread(restartAudioEngine);
         restartThread.detach();
     }
-    
+
     void loadSample(int padIndex, const int16_t *audioData, int32_t frameCount) {
         if (padIndex < 0 || padIndex >= PAD_COUNT) return;
         if (frameCount > MAX_SAMPLE_SIZE) return;
-        
+
         samples[padIndex].data.resize(frameCount);
         std::copy(audioData, audioData + frameCount, samples[padIndex].data.begin());
         samples[padIndex].frameCount = frameCount;
         samples[padIndex].loaded = true;
     }
-    
+
     void playSample(int padIndex, float volume, float pitch, bool delayOn, float delayMs, float delayLevel, float eqLow, float eqMid, float eqHigh, int chokeGroup, float attackMs, float releaseMs) {
         if (padIndex < 0 || padIndex >= PAD_COUNT) return;
         if (!samples[padIndex].loaded) return;
-        
+
         bool hasEq = (std::abs(eqLow) > 0.1f || std::abs(eqMid) > 0.1f || std::abs(eqHigh) > 0.1f);
         float attFrames = (attackMs > 0) ? (attackMs * sampleRate / 1000.0f) : 0;
         float relFrames = (releaseMs > 0) ? (releaseMs * sampleRate / 1000.0f) : 0;
-        
-        // Choke other streams in the same group (if group > 0)
+
         if (chokeGroup > 0) {
             for (int i = 0; i < PAD_COUNT * MAX_STREAMS_PER_PAD; i++) {
                 if (streams[i].active && streams[i].chokeGroup == chokeGroup) {
@@ -243,24 +239,23 @@ public:
                 }
             }
         }
-        
-        // Find streams
+
         PlaybackStream* mainStream = nullptr;
         PlaybackStream* fxStream = nullptr;
-        
+
         for (int i = 0; i < PAD_COUNT * MAX_STREAMS_PER_PAD; i++) {
             if (!streams[i].active) {
                 if (!mainStream) {
                     mainStream = &streams[i];
                 } else if (delayOn && !fxStream) {
                     fxStream = &streams[i];
-                    break; // Found both
+                    break;
                 } else if (!delayOn) {
-                    break; // Only need main
+                    break;
                 }
             }
         }
-        
+
         if (mainStream) {
             mainStream->padIndex = padIndex;
             mainStream->sampleIndex = padIndex;
@@ -280,7 +275,7 @@ public:
             }
             mainStream->active = true;
         }
-        
+
         if (delayOn && fxStream) {
             fxStream->padIndex = padIndex;
             fxStream->sampleIndex = padIndex;
@@ -301,7 +296,7 @@ public:
             fxStream->active = true;
         }
     }
-    
+
     void stopPad(int padIndex) {
         for (int i = 0; i < PAD_COUNT * MAX_STREAMS_PER_PAD; i++) {
             if (streams[i].padIndex == padIndex) {
@@ -309,7 +304,7 @@ public:
             }
         }
     }
-    
+
     void stopAll() {
         for (int i = 0; i < PAD_COUNT * MAX_STREAMS_PER_PAD; i++) {
             streams[i].active = false;
@@ -328,20 +323,20 @@ static void restartAudioEngine() {
         audioStream->stop();
         audioStream->close();
     }
-    
+
     AudioStreamBuilder builder;
     builder.setChannelCount(2)
            ->setFormat(AudioFormat::I16)
            ->setCallback(audioCallback.get())
            ->setPerformanceMode(PerformanceMode::LowLatency)
            ->setSharingMode(SharingMode::Shared);
-    
+
     auto result = builder.openStream(audioStream);
     if (result != Result::OK) {
         LOGE("Failed to restart audio stream: %s", convertToText(result));
         return;
     }
-    
+
     if (audioCallback) {
         audioCallback->setSampleRate(audioStream->getSampleRate());
     }
@@ -350,29 +345,27 @@ static void restartAudioEngine() {
 }
 
 extern "C" {
-    JNIEXPORT jlong JNICALL Java_com_pramod_octapadprofast_AudioEngine_nativeCreateAudioEngine(
+    JNIEXPORT jlong JNICALL Java_com_pramod_octapadpromidi_AudioEngine_nativeCreateAudioEngine(
             JNIEnv *env, jobject instance) {
         try {
             audioCallback = std::make_unique<OctapadAudioCallback>();
-            
+
             AudioStreamBuilder builder;
             builder.setChannelCount(2)
                    ->setFormat(AudioFormat::I16)
                    ->setCallback(audioCallback.get())
                    ->setPerformanceMode(PerformanceMode::LowLatency)
                    ->setSharingMode(SharingMode::Shared)
-                   ->setUsage(Usage::Game) // Helps with fast response
+                   ->setUsage(Usage::Game)
                    ->setContentType(ContentType::Sonification);
-            
+
             auto result = builder.openStream(audioStream);
             if (result != Result::OK) {
                 LOGE("Failed to open audio stream: %s", convertToText(result));
                 return 0;
             }
-            
-            // Optimize buffer size for ultra-low latency
+
             audioStream->setBufferSizeInFrames(audioStream->getFramesPerBurst() * 2);
-            
             audioCallback->setSampleRate(audioStream->getSampleRate());
             audioStream->start();
             LOGI("Audio engine created successfully");
@@ -382,37 +375,37 @@ extern "C" {
             return 0;
         }
     }
-    
-    JNIEXPORT void JNICALL Java_com_pramod_octapadprofast_AudioEngine_nativeLoadSample(
+
+    JNIEXPORT void JNICALL Java_com_pramod_octapadpromidi_AudioEngine_nativeLoadSample(
             JNIEnv *env, jobject instance, jint padIndex, jshortArray audioData, jint frameCount) {
         if (!audioCallback) return;
         jshort *data = env->GetShortArrayElements(audioData, nullptr);
         audioCallback->loadSample(padIndex, data, frameCount);
         env->ReleaseShortArrayElements(audioData, data, JNI_ABORT);
     }
-    
-    JNIEXPORT void JNICALL Java_com_pramod_octapadprofast_AudioEngine_nativePlaySample(
-            JNIEnv *env, jobject instance, jint padIndex, jfloat volume, jfloat pitch, 
-            jboolean delayOn, jfloat delayMs, jfloat delayLevel, 
+
+    JNIEXPORT void JNICALL Java_com_pramod_octapadpromidi_AudioEngine_nativePlaySample(
+            JNIEnv *env, jobject instance, jint padIndex, jfloat volume, jfloat pitch,
+            jboolean delayOn, jfloat delayMs, jfloat delayLevel,
             jfloat eqLow, jfloat eqMid, jfloat eqHigh,
             jint chokeGroup, jfloat attackMs, jfloat releaseMs) {
         if (!audioCallback) return;
         audioCallback->playSample(padIndex, volume, pitch, delayOn, delayMs, delayLevel, eqLow, eqMid, eqHigh, chokeGroup, attackMs, releaseMs);
     }
-    
-    JNIEXPORT void JNICALL Java_com_pramod_octapadprofast_AudioEngine_nativeStopPad(
+
+    JNIEXPORT void JNICALL Java_com_pramod_octapadpromidi_AudioEngine_nativeStopPad(
             JNIEnv *env, jobject instance, jint padIndex) {
         if (!audioCallback) return;
         audioCallback->stopPad(padIndex);
     }
-    
-    JNIEXPORT void JNICALL Java_com_pramod_octapadprofast_AudioEngine_nativeStopAll(
+
+    JNIEXPORT void JNICALL Java_com_pramod_octapadpromidi_AudioEngine_nativeStopAll(
             JNIEnv *env, jobject instance) {
         if (!audioCallback) return;
         audioCallback->stopAll();
     }
-    
-    JNIEXPORT void JNICALL Java_com_pramod_octapadprofast_AudioEngine_nativeDestroyAudioEngine(
+
+    JNIEXPORT void JNICALL Java_com_pramod_octapadpromidi_AudioEngine_nativeDestroyAudioEngine(
             JNIEnv *env, jobject instance) {
         if (audioStream) {
             audioStream->stop();
